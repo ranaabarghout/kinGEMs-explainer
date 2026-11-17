@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>kinGEMs Explained</title>
+<meta name="description" content="An interactive explainer for kinGEMs: building enzyme-constrained genome-scale metabolic models from deep learning-predicted kcat values, tuned by simulated annealing. PLOS Computational Biology, 2026.">
+<meta property="og:title" content="kinGEMs: enzyme-constrained metabolic models from predicted kinetics">
+<meta property="og:description" content="From protein sequence to 93 organism-scale models: an interactive explainer of the kinGEMs paper (PLOS Comp Bio 2026).">
+<meta property="og:image" content="assets/figs/fig01.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='8' cy='8' r='5' fill='%237a22e8'/%3E%3Ccircle cx='24' cy='8' r='5' fill='%23c9a8f2'/%3E%3Ccircle cx='16' cy='24' r='5' fill='%233b7272'/%3E%3Cpath d='M8 8L24 8L16 24Z' fill='none' stroke='%2341444c' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#top">kin<b>GEMs</b> · explained</a>
+    <nav class="nav">
+      <a href="#atlas" class="keep">Explore</a>
+      <a href="#anneal">Tuning</a>
+      <a href="#findings" class="keep">Findings</a>
+      <a href="#figures">Figures</a>
+      <a href="#cite">Cite</a>
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="journal"><span>PLOS Computational Biology</span> · Nov 2026 · 22(11): e1014881</div>
+      <h1>kin<em>GEMs</em></h1>
+      <p class="subtitle">A robust and scalable framework for resource-constraint models through stochastic tuning of deep learning-predicted kinetic parameters</p>
+      <p class="authors"><b>Rana A. Barghout</b>, Lya Chiñas Serrano, Benjamin Sanchez-Lengeling, Radhakrishnan Mahadevan</p>
+      <div class="btns">
+        <a class="btn primary" href="https://doi.org/10.1371/journal.pcbi.1014881" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 1.5h5.5L13 5v9.5H4z"/><path d="M9 1.5V5h4"/></svg>Read the paper</a>
+        <a class="btn" href="https://github.com/LMSE/kinGEMs" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>Code &amp; models</a>
+        <a class="btn" href="#cite">Cite</a>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 420 300" id="heroNet"></svg>
+    </div>
+  </div>
+  <div class="tldr">
+    <div><div class="n" style="color:var(--red)">~89%</div><div class="l">of the k<sub>cat</sub> values an <i>E. coli</i> model needs are missing from BRENDA</div></div>
+    <div><div class="n" style="color:var(--teal)">CPI-Pred</div><div class="l">predicts them from protein sequence and compound structure, with uncertainty</div></div>
+    <div><div class="n" style="color:var(--violet)">94×</div><div class="l">drop in median flux variability once every enzyme constraint is applied</div></div>
+    <div><div class="n" style="color:var(--brown)">93</div><div class="l">tuned enzyme-constrained models, from <i>E. coli</i> to fungi and mammalian cells</div></div>
+  </div>
+</div>
+
+<!-- ============ ATLAS ============ -->
+<section id="atlas">
+  <p class="eyebrow">Explore · five scales</p>
+  <h2>From one protein sequence to the tree of life</h2>
+  <p class="lede">kinGEMs links a molecular-scale prediction (how fast one enzyme works) to network-scale behaviour (how a whole cell grows). Step through each scale, or use the arrow keys.</p>
+
+  <div class="atlas" id="atlasBox">
+    <div class="ruler" id="ruler" role="tablist" aria-label="Scale"></div>
+
+    <div class="stage" id="stage">
+      <!-- Scene 1 : molecule -->
+      <div class="scene" data-i="0">
+        <svg viewBox="0 0 560 440">
+          <defs>
+            <marker id="arM" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--magenta)"/></marker>
+            <marker id="arT" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--teal)"/></marker>
+          </defs>
+          <rect x="20" y="72" width="200" height="250" rx="14" fill="var(--peach)" opacity=".7"/>
+          <rect x="34" y="96" width="172" height="86" rx="10" fill="var(--card)" stroke="var(--orange)" stroke-width="2"/>
+          <text x="120" y="120" text-anchor="middle" font-size="14">Protein sequence</text>
+          <line x1="44" y1="152" x2="196" y2="152" stroke="var(--peri)" stroke-width="2"/>
+          <g font-size="9" text-anchor="middle">
+            <circle cx="62" cy="152" r="12" fill="var(--peri-bg)" stroke="var(--peri)" stroke-width="1.5"/><text x="62" y="155">Tyr</text>
+            <circle cx="102" cy="152" r="12" fill="var(--peri-bg)" stroke="var(--peri)" stroke-width="1.5"/><text x="102" y="155">Ser</text>
+            <circle cx="142" cy="152" r="12" fill="var(--peri-bg)" stroke="var(--peri)" stroke-width="1.5"/><text x="142" y="155">Gly</text>
+            <circle cx="182" cy="152" r="12" fill="var(--peri-bg)" stroke="var(--peri)" stroke-width="1.5"/><text x="182" y="155">Ser</text>
+          </g>
+          <rect x="34" y="200" width="172" height="86" rx="10" fill="var(--card)" stroke="var(--orange)" stroke-width="2"/>
+          <text x="120" y="226" text-anchor="middle" font-size="14">Compound SMILES</text>
+          <text x="120" y="250" text-anchor="middle" font-size="8.5" class="m" fill="var(--muted)" style="fill:var(--muted)">OC[C@H]1OC(O)[C@H](O)</text>
+          <text x="120" y="263" text-anchor="middle" font-size="8.5" class="m" style="fill:var(--muted)">[C@@H](O)[C@@H]1O</text>
+          <text x="120" y="350" text-anchor="middle" font-size="17" font-weight="700" style="fill:var(--orange)">Inputs</text>
+
+          <path class="flow" d="M222 140 H 268" stroke="var(--magenta)" stroke-width="2.5" fill="none" marker-end="url(#arM)"/>
+          <path class="flow" d="M222 244 H 268" stroke="var(--magenta)" stroke-width="2.5" fill="none" marker-end="url(#arM)"/>
+
+          <rect x="272" y="86" width="150" height="214" rx="6" fill="var(--peri-bg)" stroke="var(--peri)" stroke-width="2"/>
+          <text x="347" y="76" text-anchor="middle" font-size="18" font-weight="700" style="fill:var(--muted)">CPI-Pred</text>
+          <g>
+            <rect x="290" y="104" width="12" height="12" fill="#f2a46a"/><rect x="302" y="104" width="12" height="12" fill="#7cc576"/><rect x="314" y="104" width="12" height="12" fill="#5ea3e0"/><rect x="326" y="104" width="12" height="12" fill="#f2cc4a"/><rect x="338" y="104" width="12" height="12" fill="#e06a6a"/><rect x="350" y="104" width="12" height="12" fill="#b08ae0"/>
+            <text x="326" y="134" text-anchor="middle" font-size="9" class="m" style="fill:var(--muted)">ESM-2</text>
+            <polygon points="388,104 404,116 398,134 378,134 372,116" fill="var(--peri-bg)" stroke="var(--blue)" stroke-width="1.3"/>
+            <text x="388" y="148" text-anchor="middle" font-size="9" class="m" style="fill:var(--muted)">fingerprint</text>
+          </g>
+          <g id="nn1" stroke="var(--teal)" stroke-width=".8" opacity=".75"></g>
+          <path class="flow" d="M424 194 H 452 V 236" stroke="var(--magenta)" stroke-width="2.5" fill="none" marker-end="url(#arM)"/>
+          <rect x="396" y="242" width="152" height="44" rx="10" fill="var(--tan)" stroke="var(--brown)" stroke-width="2"/>
+          <text x="472" y="270" text-anchor="middle" font-size="14" class="m">k<tspan font-size="10" dy="3">cat</tspan><tspan dy="-3"> = 0.7 ± 0.2</tspan></text>
+          <text x="472" y="312" text-anchor="middle" font-size="17" font-weight="700" style="fill:var(--brown)">Output</text>
+          <text x="472" y="332" text-anchor="middle" font-size="11" style="fill:var(--muted)">value + uncertainty</text>
+        </svg>
+      </div>
+
+      <!-- Scene 2 : enzymes -->
+      <div class="scene" data-i="1">
+        <svg viewBox="0 0 560 440" id="enzScene">
+          <text x="280" y="40" text-anchor="middle" font-size="20" font-weight="500">Enzymatic context</text>
+          <g id="blobs"></g>
+          <g id="missing" style="transition:opacity .6s">
+            <circle cx="96" cy="372" r="20" fill="var(--red)"/>
+            <text x="96" y="380" text-anchor="middle" font-size="22" font-weight="700" style="fill:#fff">!</text>
+            <text x="128" y="368" font-size="17" style="fill:var(--red)">~89% of k<tspan font-size="12" dy="3">cat</tspan><tspan dy="-3"> data missing</tspan></text>
+            <text x="128" y="388" font-size="12" style="fill:var(--muted)">for <tspan font-style="italic">E. coli</tspan> MG1655 in BRENDA</text>
+          </g>
+          <g id="filled" style="opacity:0;transition:opacity .6s">
+            <text x="96" y="372" font-size="17" style="fill:var(--teal)" font-weight="500">CPI-Pred fills every gap</text>
+            <text x="96" y="392" font-size="12" style="fill:var(--muted)">each enzyme now carries a predicted k<tspan font-size="9" dy="2">cat</tspan><tspan dy="-2"> and a confidence range</tspan></text>
+          </g>
+          <g transform="translate(482 92)">
+            <rect x="0" y="0" width="16" height="16" fill="var(--grey-enz)"/><text x="24" y="12" font-size="11" class="m" style="fill:var(--muted)">unknown</text>
+            <defs><linearGradient id="kg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3ecfd"/><stop offset="1" stop-color="#7a22e8"/></linearGradient></defs>
+            <rect x="0" y="28" width="16" height="140" fill="url(#kg)"/>
+            <text x="24" y="40" font-size="11" class="m" style="fill:var(--muted)">high</text>
+            <text x="24" y="166" font-size="11" class="m" style="fill:var(--muted)">low</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Scene 3 : network -->
+      <div class="scene" data-i="2">
+        <svg viewBox="0 0 560 440">
+          <defs><marker id="arK" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ink)"/></marker>
+          <marker id="arG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--green)"/></marker></defs>
+          <rect x="40" y="30" width="250" height="380" rx="4" fill="var(--peri-bg)" stroke="var(--peri)" stroke-width="2"/>
+          <g id="glyc"></g>
+          <g transform="translate(320 70)">
+            <text x="0" y="0" font-size="15" font-weight="500">The enzyme budget</text>
+            <text x="0" y="40" font-size="22" font-style="italic">Σ E<tspan font-size="14" dy="4">i</tspan><tspan dy="-4"> · MW</tspan><tspan font-size="14" dy="4">i</tspan><tspan dy="-4"> ≤ </tspan><tspan style="fill:var(--green)">E</tspan><tspan font-size="14" dy="4" style="fill:var(--green)">total</tspan></text>
+            <text x="0" y="74" font-size="12" style="fill:var(--muted)">Each reaction can only run as fast</text>
+            <text x="0" y="90" font-size="12" style="fill:var(--muted)">as k<tspan font-size="9" dy="2">cat</tspan><tspan dy="-2"> × enzyme allows, and the cell</tspan></text>
+            <text x="0" y="106" font-size="12" style="fill:var(--muted)">has a finite protein pool to spend.</text>
+            <text x="0" y="146" font-size="10" class="m" style="fill:var(--muted)">ENZYME POOL (share of dry mass)</text>
+            <rect x="0" y="156" width="200" height="22" rx="3" fill="none" stroke="var(--rule)" stroke-width="1.5"/>
+            <g id="poolBar"></g>
+            <text x="0" y="200" font-size="10" class="m" style="fill:var(--muted)">HK · GPI · PFK1 · ALD · TPI · other</text>
+            <rect x="0" y="232" width="200" height="74" rx="10" fill="var(--green-bg)" stroke="var(--green)" stroke-width="2"/>
+            <text x="100" y="262" text-anchor="middle" font-size="13" class="m">isoenzymes · complexes</text>
+            <text x="100" y="284" text-anchor="middle" font-size="13" class="m">promiscuous enzymes</text>
+            <text x="100" y="330" text-anchor="middle" font-size="11" style="fill:var(--muted)">all handled via GPR rules</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Scene 4 : cell / tuning -->
+      <div class="scene" data-i="3">
+        <svg viewBox="0 0 560 440">
+          <defs><marker id="arL" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--teal)"/></marker></defs>
+          <g transform="translate(280 210)">
+            <circle r="120" fill="none" stroke="var(--teal)" stroke-width="2" stroke-dasharray="4 7" class="flow"/>
+            <g transform="rotate(-28)">
+              <rect x="-74" y="-34" width="148" height="68" rx="34" fill="var(--lav-2)" stroke="var(--violet-2)" stroke-width="2.5"/>
+              <path d="M-50 -6 C -30 -24, -10 18, 10 -4 S 40 14, 52 -2" fill="none" stroke="var(--lav)" stroke-width="2"/>
+              <path d="M-48 10 C -24 -2, -4 26, 20 8 S 44 -8, 50 12" fill="none" stroke="var(--lav)" stroke-width="2"/>
+            </g>
+            <text y="70" text-anchor="middle" font-size="12" class="m" style="fill:var(--muted)">ecGEM</text>
+          </g>
+          <g font-size="13">
+            <g transform="translate(280 90)"><circle r="17" fill="var(--card)" stroke="var(--ink)" stroke-width="1.5"/><text y="5" text-anchor="middle" font-size="15">1</text>
+              <text y="-28" text-anchor="middle" font-weight="500">Rank enzymes by mass share</text></g>
+            <g transform="translate(400 210)"><circle r="17" fill="var(--card)" stroke="var(--ink)" stroke-width="1.5"/><text y="5" text-anchor="middle" font-size="15">2</text>
+              <text x="26" y="0" font-weight="500">Nudge k<tspan font-size="9" dy="2">cat</tspan></text><text x="26" y="16" font-size="11" style="fill:var(--red)">within CPI-Pred bounds</text></g>
+            <g transform="translate(280 330)"><circle r="17" fill="var(--card)" stroke="var(--ink)" stroke-width="1.5"/><text y="5" text-anchor="middle" font-size="15">3</text>
+              <text y="40" text-anchor="middle" font-weight="500">Re-solve FBA, compare growth</text></g>
+            <g transform="translate(160 210)"><circle r="17" fill="var(--card)" stroke="var(--ink)" stroke-width="1.5"/><text y="5" text-anchor="middle" font-size="15">4</text>
+              <text x="-26" y="0" text-anchor="end" font-weight="500">Accept?</text><text x="-26" y="16" text-anchor="end" font-size="11" style="fill:var(--muted)">Metropolis rule, T↓</text></g>
+          </g>
+          <g transform="translate(420 318)">
+            <rect x="0" y="0" width="120" height="84" rx="4" fill="var(--card)" stroke="var(--rule)"/>
+            <path d="M12 12 C 22 54, 40 66, 108 70" fill="none" stroke="var(--blue)" stroke-width="2"/>
+            <line x1="12" y1="72" x2="110" y2="72" stroke="var(--muted)"/><line x1="12" y1="8" x2="12" y2="72" stroke="var(--muted)"/>
+            <text x="60" y="20" font-size="10" class="m" style="fill:var(--muted)">temperature</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Scene 5 : tree of life -->
+      <div class="scene" data-i="4">
+        <svg viewBox="0 0 560 440" id="treeScene"></svg>
+      </div>
+      <div class="scale-tag" id="scaleTag"></div>
+    </div>
+
+    <aside class="panel" aria-live="polite">
+      <div id="panelBody"></div>
+      <div class="pager"><button id="prevBtn">← Prev</button><button id="nextBtn">Next →</button></div>
+    </aside>
+  </div>
+  <div class="atlas-foot"><span>Schematic, not to scale</span><span id="atlasCount">1 / 5</span></div>
+</section>
+
+<!-- ============ ANNEALING DEMO ============ -->
+<section id="anneal">
+  <p class="eyebrow">Try it · stochastic tuning</p>
+  <h2>Why the predictions need tuning, and how kinGEMs does it</h2>
+  <div class="card">
+    <div class="demo">
+      <div>
+        <p class="lede" style="font-size:17px">Plug raw ML predictions into a model and it usually grows far too slowly: a few under-predicted enzymes eat the whole protein budget. Other pipelines relax <em>every</em> enzyme with one global saturation factor. kinGEMs instead perturbs the enzymes that use the most protein, <b>one k<sub>cat</sub> at a time, inside each prediction's own uncertainty range</b>, and keeps changes that bring growth closer to the measured rate.</p>
+        <p style="color:var(--ink2);font-size:15px">Below is a <b>toy six-enzyme pathway</b> running the same loop. The red bars are each enzyme's allowed range, the grey tick is the CPI-Pred starting value, the orange ✕ is the current value, and the lilac underline is that enzyme's share of the protein budget.</p>
+        <div id="enzRows"></div>
+        <div class="demo-ctrl">
+          <button class="btn primary" id="runBtn">▶ Run annealing</button>
+          <button class="btn" id="stepBtn">Step</button>
+          <button class="btn" id="resetBtn">Reset</button>
+          <label>pool size <input type="range" id="poolSize" min="1" max="6" value="3"><span id="poolVal">3</span></label>
+        </div>
+      </div>
+      <div>
+        <div class="demo-stats">
+          <div class="stat"><div class="k">growth μ</div><div class="v" id="sMu">–</div></div>
+          <div class="stat"><div class="k">target</div><div class="v" style="color:var(--green)">0.87</div></div>
+          <div class="stat"><div class="k">iteration</div><div class="v" id="sIt">0</div></div>
+        </div>
+        <div class="chart"><svg id="annealChart" viewBox="0 0 460 300"></svg></div>
+        <div class="log" id="log"></div>
+        <p class="note">This toy runs in your browser and is for illustration only. Its numbers aren't from the paper. The real runs (Fig 10) start at T₀ = 100, perturb the top 500 enzymes by mass in iML1515, cap each k<sub>cat</sub> two orders of magnitude above its CPI-Pred standard deviation, and stop early after 50 iterations without improvement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINDINGS ============ -->
+<section id="findings">
+  <p class="eyebrow">What the paper shows</p>
+  <h2>Precision, then accuracy</h2>
+  <p class="lede">The paper scores models on two separate axes. <b>Precision</b> is how far the constraints shrink the space of possible fluxes. <b>Accuracy</b> is how well predictions match experimental data the model was never tuned on. Tightening a model doesn't automatically make it right, so each axis is tested on its own.</p>
+
+  <div class="find-tabs" id="findTabs">
+    <button data-f="0" class="on">Precision</button>
+    <button data-f="1">¹³C flux data</button>
+    <button data-f="2">Overflow metabolism</button>
+    <button data-f="3">Oleaginous yeast</button>
+    <button data-f="4">Proteomics</button>
+    <button data-f="5">93 organisms</button>
+  </div>
+
+  <div class="card" id="findCard">
+    <!-- 0 precision -->
+    <div class="finding on" data-f="0">
+      <div>
+        <div class="big">94×<small>smaller median flux range</small></div>
+        <p>Enzyme constraints were added one level at a time to <i>E. coli</i> iML1515. Median flux variability fell from 4.7 to 0.05. Adding <b>promiscuous enzymes</b>, where one protein serves many reactions, caused the largest single drop.</p>
+        <p>The catch: the fully constrained model grows at only about 3% of baseline. Annealing (L5) restores baseline growth and still keeps variability about 2× below the unconstrained GEM.</p>
+        <div class="lvl-btns" id="lvlBtns"></div>
+        <div class="lvl-desc" id="lvlDesc"></div>
+      </div>
+      <div class="chart"><svg id="ablChart" viewBox="0 0 480 320"></svg>
+        <p class="note">Bars: median flux variability (log scale). Line: max biomass flux (1/hr). Values marked ≈ were read off Fig 3B. The rest are quoted in the text.</p></div>
+    </div>
+    <!-- 1 MFA -->
+    <div class="finding" data-f="1">
+      <div>
+        <div class="big">46<small>reactions vs. ¹³C-MFA</small></div>
+        <p>Predicted flux ranges were compared with experimentally measured <sup>13</sup>C metabolic flux analysis. All fluxes were rescaled to glucose uptake = 100, so a model that simply grows slower doesn't look more precise.</p>
+        <p>Both enzyme-constrained models sit closer to the measured fluxes than the baseline GEM. Every pairwise comparison against baseline is significant (Wilcoxon, p &lt; 0.001). Tuning gives the <b>tightest</b> normalized ranges, while the untuned model has the closest flux <b>pattern</b>.</p>
+      </div>
+      <div class="chart"><svg id="mfaChart" viewBox="0 0 480 300"></svg></div>
+    </div>
+    <!-- 2 overflow -->
+    <div class="finding" data-f="2">
+      <div>
+        <div class="big">0.16<small>h⁻¹ onset error (iJO1366)</small></div>
+        <p>Fast-growing <i>E. coli</i> secretes acetate even with oxygen available. This is <b>overflow metabolism</b>. Standard FBA can't reproduce it without a hand-set oxygen limit, because respiration is always the best choice when enzymes cost nothing.</p>
+        <p>With a finite enzyme budget, cheaper fermentation wins at high growth rates, so the switch emerges on its own. Three separate <i>E. coli</i> reconstructions, each tuned only to max growth, all place the onset close to the experimental threshold.</p>
+      </div>
+      <div class="chart"><svg id="ovfChart" viewBox="0 0 480 300"></svg>
+        <p class="note">Gap between predicted and experimental acetate-onset growth rate (log scale, lower is better). Fig 7D.</p></div>
+    </div>
+    <!-- 3 R. toruloides -->
+    <div class="finding" data-f="3">
+      <div>
+        <div class="big" style="color:var(--orange)">0<small>fluxes used in tuning</small></div>
+        <p><i>Rhodotorula toruloides</i> is an oil-producing yeast with far less kinetic data than <i>E. coli</i>. kinGEMs tuned it only to the measured <b>growth rate</b>, then was compared against a manually curated, proteome-constrained GECKO model.</p>
+        <p>It recovered the NADPH trade-off: under nitrogen limitation, reducing power shifts from glutamate dehydrogenase (GDH1, amino acids) to fatty acid synthase (FAS, lipids). It also matched carbon-source-specific routes such as the D-arabinitol xylose bypass and the glyoxylate shunt on acetate. Two reported features were not reproduced.</p>
+      </div>
+      <div class="chart"><svg id="nadphChart" viewBox="0 0 480 300"></svg>
+        <p class="note">Share of cytosolic NADPH consumption on glucose (Fig 6A; Rekena et al. reference values from the text).</p></div>
+    </div>
+    <!-- 4 proteomics -->
+    <div class="finding" data-f="4">
+      <div>
+        <div class="big" style="color:var(--teal)">r ≈ 0.34<small>either way</small></div>
+        <p>Predicted enzyme amounts were compared with absolute proteomics (Schmidt et al.) across 15 growth conditions and 4 k<sub>cat</sub> sources: CPI-Pred, CatPred, BRENDA, and random log-normal draws. Agreement was moderate (Pearson r 0.27–0.46). <b>No k<sub>cat</sub> source clearly won</b>, and annealing did not consistently lower RMSE.</p>
+        <p>Parameters tuned on one condition and reused on a different one fit proteomics just as well as matched ones (r = 0.335 vs 0.336, across 767 transfers). Annealing mostly moves protein among the same high-abundance enzymes, whichever condition drove the search.</p>
+      </div>
+      <div class="chart"><svg id="protChart" viewBox="0 0 480 260"></svg></div>
+    </div>
+    <!-- 5 scale -->
+    <div class="finding" data-f="5">
+      <div>
+        <div class="big" style="color:var(--brown)">93<small>BiGG models, tuned</small></div>
+        <p>The pipeline maps gene IDs to protein sequences, predicts k<sub>cat</sub> values, adds constraints and tunes. It ran end-to-end on the BiGG database, covering Gram-negative and Gram-positive bacteria, mycobacteria, parasitic protists, fungi and mammalian cell lines.</p>
+        <p>Quality is <b>not</b> uniform. <i>E. coli</i>/<i>Shigella</i> models stay closest to their unconstrained growth optimum (median deviation 8%), and the gap widens with phylogenetic distance, peaking in eukaryotes. That pattern is consistent with where CPI-Pred's training data and validation come from.</p>
+      </div>
+      <div class="chart"><svg id="taxChart" viewBox="0 0 480 300"></svg>
+        <p class="note">Model counts per group as reported in Fig 9A.</p></div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:44px">Read with care</h3>
+  <div class="caveats">
+    <div class="cav"><h4>Tuned k<sub>cat</sub>s are not measured k<sub>cat</sub>s</h4><p>Annealing compensates for <em>any</em> model error: kinetic, structural or regulatory. 37% of perturbed values hit the search ceiling. Read post-tuning shifts as model-level corrections, not in vivo turnover numbers.</p></div>
+    <div class="cav"><h4>Mostly k<sub>cat</sub> only</h4><p>K<sub>M</sub>, K<sub>I</sub> and substrate saturation also shape real enzyme capacity. Adding them is left for future work.</p></div>
+    <div class="cav"><h4>Precision ≠ accuracy</h4><p>A narrow flux range can still be wrong. That's why accuracy claims rest on independent data (MFA, proteomics, overflow onset), not on range width.</p></div>
+    <div class="cav"><h4>Best close to <i>E. coli</i></h4><p>Model quality drops for distant taxa. Some models couldn't be built at all because their gene IDs didn't map to protein sequences.</p></div>
+  </div>
+</section>
+
+<!-- ============ FIGURES ============ -->
+<section id="figures">
+  <p class="eyebrow">Figures</p>
+  <h2>From the paper</h2>
+  <p class="lede">All figures © 2026 the authors, reproduced under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> from <a href="https://doi.org/10.1371/journal.pcbi.1014881" target="_blank" rel="noopener">PLOS Comp Biol 22(11): e1014881</a>. Click to enlarge.</p>
+  <div class="figs" id="figGrid"></div>
+</section>
+
+<!-- ============ CITE ============ -->
+<section id="cite">
+  <p class="eyebrow">Cite</p>
+  <h2>Citation</h2>
+  <div class="card">
+    <p style="margin:0;color:var(--ink2)">Barghout RA, Chiñas Serrano L, Sanchez-Lengeling B, Mahadevan R (2026). kinGEMs: A robust and scalable framework for resource-constraint models through stochastic tuning of deep learning-predicted kinetic parameters. <i>PLOS Computational Biology</i> 22(11): e1014881. <a href="https://doi.org/10.1371/journal.pcbi.1014881">doi:10.1371/journal.pcbi.1014881</a></p>
+    <pre class="bib" id="bib"><button class="btn copy" id="copyBib">Copy</button>@article{barghout2026kingems,
+  title   = {kinGEMs: A robust and scalable framework for resource-constraint
+             models through stochastic tuning of deep learning-predicted
+             kinetic parameters},
+  author  = {Barghout, Rana A. and Chi{\~n}as Serrano, Lya and
+             Sanchez-Lengeling, Benjamin and Mahadevan, Radhakrishnan},
+  journal = {PLOS Computational Biology},
+  volume  = {22},
+  number  = {11},
+  pages   = {e1014881},
+  year    = {2026},
+  doi     = {10.1371/journal.pcbi.1014881}
+}</pre>
+  </div>
+</section>
+
+<footer>
+  <span>kinGEMs · LMSE, University of Toronto</span>
+  <span><a href="https://github.com/LMSE/kinGEMs" style="border:0;color:inherit">github.com/LMSE/kinGEMs</a></span>
+</footer>
+</main>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true"><button id="lbClose" aria-label="Close">×</button><img id="lbImg" alt=""><div class="cap" id="lbCap"></div></div>
+
+<script src="assets/main.js"></script>
+</body>
+</html>
