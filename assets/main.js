@@ -67,7 +67,7 @@ const stages = [
   { tick:'~2 µm', small:'cell', tag:'Scale · cell phenotype',
     title:'Tune against how the cell actually grows',
     body:['Raw predictions are imperfect and depend on conditions, so a freshly built ecGEM often grows far too slowly. Earlier tools relax <i>all</i> enzymes with one global saturation factor.',
-          'kinGEMs runs <b>simulated annealing</b> instead. It perturbs the enzymes that use the most protein, keeps each one inside its CPI-Pred uncertainty range, and accepts changes that move predicted growth toward the measured rate. This is gradient-free, so it copes with the jagged, partly infeasible landscape of FBA.'],
+          'kinGEMs runs <b>simulated annealing</b> instead. It perturbs the enzymes that use the most protein, keeps each one inside its CPI-Pred uncertainty range, and accepts changes that move predicted growth toward the measured rate.'],
     ref:'Fig 2D · Fig 10' },
   { tick:'93 GEMs', small:'tree of life', tag:'Scale · phylogeny',
     title:'Run it across the tree of life',

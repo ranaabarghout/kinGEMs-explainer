@@ -17,5 +17,3 @@ python3 -m http.server 8000
 - `assets/style.css`: theme. Colors are taken from the paper's figures. Fonts are Roboto and Roboto Mono.
 - `assets/main.js`: atlas navigation, simulated-annealing toy, charts, lightbox
 - `assets/figs/`: paper figures (CC BY 4.0)
-
-Figures © 2026 the authors, reused under CC BY 4.0.

@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>kinGEMs Explained</title>
-<meta name="description" content="An interactive explainer for kinGEMs: building enzyme-constrained genome-scale metabolic models from deep learning-predicted kcat values, tuned by simulated annealing. PLOS Computational Biology, 2026.">
+<meta name="description" content="An interactive guide to kinGEMs. It builds genome-scale metabolic models with enzyme constraints, using kcat values predicted by deep learning and tuned by simulated annealing. PLOS Computational Biology, 2026.">
 <meta property="og:title" content="kinGEMs: enzyme-constrained metabolic models from predicted kinetics">
-<meta property="og:description" content="From protein sequence to 93 organism-scale models: an interactive explainer of the kinGEMs paper (PLOS Comp Bio 2026).">
+<meta property="og:description" content="From protein sequence to 93 metabolic models: an interactive guide to the kinGEMs paper (PLOS Comp Bio 2026).">
 <meta property="og:image" content="assets/figs/fig01.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='8' cy='8' r='5' fill='%237a22e8'/%3E%3Ccircle cx='24' cy='8' r='5' fill='%23c9a8f2'/%3E%3Ccircle cx='16' cy='24' r='5' fill='%233b7272'/%3E%3Cpath d='M8 8L24 8L16 24Z' fill='none' stroke='%2341444c' stroke-width='2'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,19 +52,13 @@
       <svg viewBox="0 0 420 300" id="heroNet"></svg>
     </div>
   </div>
-  <div class="tldr">
-    <div><div class="n" style="color:var(--red)">~89%</div><div class="l">of the k<sub>cat</sub> values an <i>E. coli</i> model needs are missing from BRENDA</div></div>
-    <div><div class="n" style="color:var(--teal)">CPI-Pred</div><div class="l">predicts them from protein sequence and compound structure, with uncertainty</div></div>
-    <div><div class="n" style="color:var(--violet)">94×</div><div class="l">drop in median flux variability once every enzyme constraint is applied</div></div>
-    <div><div class="n" style="color:var(--brown)">93</div><div class="l">tuned enzyme-constrained models, from <i>E. coli</i> to fungi and mammalian cells</div></div>
-  </div>
 </div>
 
 <!-- ============ ATLAS ============ -->
 <section id="atlas">
   <p class="eyebrow">Explore · five scales</p>
-  <h2>From one protein sequence to the tree of life</h2>
-  <p class="lede">kinGEMs links a molecular-scale prediction (how fast one enzyme works) to network-scale behaviour (how a whole cell grows). Step through each scale, or use the arrow keys.</p>
+  <h2>From one protein sequence to a virtual cell</h2>
+  <p class="lede">kinGEMs links a prediction about one molecule (how fast an enzyme works) to the behaviour of a whole network (how fast a cell grows). Step through each scale, or use the arrow keys.</p>
 
   <div class="atlas" id="atlasBox">
     <div class="ruler" id="ruler" role="tablist" aria-label="Scale"></div>
@@ -126,7 +120,7 @@
           </g>
           <g id="filled" style="opacity:0;transition:opacity .6s">
             <text x="96" y="372" font-size="17" style="fill:var(--teal)" font-weight="500">CPI-Pred fills every gap</text>
-            <text x="96" y="392" font-size="12" style="fill:var(--muted)">each enzyme now carries a predicted k<tspan font-size="9" dy="2">cat</tspan><tspan dy="-2"> and a confidence range</tspan></text>
+            <text x="96" y="392" font-size="12" style="fill:var(--muted)">each enzyme now has a predicted k<tspan font-size="9" dy="2">cat</tspan><tspan dy="-2"> and a confidence range</tspan></text>
           </g>
           <g transform="translate(482 92)">
             <rect x="0" y="0" width="16" height="16" fill="var(--grey-enz)"/><text x="24" y="12" font-size="11" class="m" style="fill:var(--muted)">unknown</text>
@@ -158,7 +152,7 @@
             <rect x="0" y="232" width="200" height="74" rx="10" fill="var(--green-bg)" stroke="var(--green)" stroke-width="2"/>
             <text x="100" y="262" text-anchor="middle" font-size="13" class="m">isoenzymes · complexes</text>
             <text x="100" y="284" text-anchor="middle" font-size="13" class="m">promiscuous enzymes</text>
-            <text x="100" y="330" text-anchor="middle" font-size="11" style="fill:var(--muted)">all handled via GPR rules</text>
+            <text x="100" y="330" text-anchor="middle" font-size="11" style="fill:var(--muted)">all handled by GPR rules</text>
           </g>
         </svg>
       </div>
@@ -217,8 +211,8 @@
   <div class="card">
     <div class="demo">
       <div>
-        <p class="lede" style="font-size:17px">Plug raw ML predictions into a model and it usually grows far too slowly: a few under-predicted enzymes eat the whole protein budget. Other pipelines relax <em>every</em> enzyme with one global saturation factor. kinGEMs instead perturbs the enzymes that use the most protein, <b>one k<sub>cat</sub> at a time, inside each prediction's own uncertainty range</b>, and keeps changes that bring growth closer to the measured rate.</p>
-        <p style="color:var(--ink2);font-size:15px">Below is a <b>toy six-enzyme pathway</b> running the same loop. The red bars are each enzyme's allowed range, the grey tick is the CPI-Pred starting value, the orange ✕ is the current value, and the lilac underline is that enzyme's share of the protein budget.</p>
+        <p class="lede" style="font-size:17px">A model built from raw ML predictions usually grows far too slowly. A few enzymes with predicted k<sub>cat</sub> values that are too low use up the whole protein budget. Other pipelines fix this by relaxing <em>every</em> enzyme with one global saturation factor. kinGEMs instead changes the enzymes that use the most protein, <b>one k<sub>cat</sub> at a time</b>. Each change stays <b>inside the ML model uncertainty range</b>. kinGEMs keeps changes that bring growth closer to the measured rate. Early in the search it also keeps some worse ones, so it does not get stuck.</p>
+        <p style="color:var(--ink2);font-size:15px">Below, a <b>toy pathway of six enzymes</b> runs the same loop. For each enzyme, the red bar is its allowed range, the grey tick is the CPI-Pred starting value, the orange ✕ is the current value, and the lilac underline is its share of the protein budget.</p>
         <div id="enzRows"></div>
         <div class="demo-ctrl">
           <button class="btn primary" id="runBtn">▶ Run annealing</button>
@@ -235,7 +229,7 @@
         </div>
         <div class="chart"><svg id="annealChart" viewBox="0 0 460 300"></svg></div>
         <div class="log" id="log"></div>
-        <p class="note">This toy runs in your browser and is for illustration only. Its numbers aren't from the paper. The real runs (Fig 10) start at T₀ = 100, perturb the top 500 enzymes by mass in iML1515, cap each k<sub>cat</sub> two orders of magnitude above its CPI-Pred standard deviation, and stop early after 50 iterations without improvement.</p>
+        <p class="note">This toy runs in your browser and only illustrates the idea. Its numbers are not from the paper. In the real runs (Fig 10), the temperature starts at T₀ = 100. The search changes the 500 enzymes in iML1515 with the largest mass share. Each k<sub>cat</sub> is capped two orders of magnitude above its CPI-Pred standard deviation. A run stops early after 50 iterations without improvement.</p>
       </div>
     </div>
   </div>
@@ -245,7 +239,7 @@
 <section id="findings">
   <p class="eyebrow">What the paper shows</p>
   <h2>Precision, then accuracy</h2>
-  <p class="lede">The paper scores models on two separate axes. <b>Precision</b> is how far the constraints shrink the space of possible fluxes. <b>Accuracy</b> is how well predictions match experimental data the model was never tuned on. Tightening a model doesn't automatically make it right, so each axis is tested on its own.</p>
+  <p class="lede">The paper scores models on two separate axes. <b>Precision</b> is how far the constraints shrink the space of possible fluxes. <b>Accuracy</b> is how well predictions match experimental data the model was never tuned on. A tighter model is not automatically a correct one, so the paper tests each axis separately.</p>
 
   <div class="find-tabs" id="findTabs">
     <button data-f="0" class="on">Precision</button>
@@ -261,20 +255,20 @@
     <div class="finding on" data-f="0">
       <div>
         <div class="big">94×<small>smaller median flux range</small></div>
-        <p>Enzyme constraints were added one level at a time to <i>E. coli</i> iML1515. Median flux variability fell from 4.7 to 0.05. Adding <b>promiscuous enzymes</b>, where one protein serves many reactions, caused the largest single drop.</p>
-        <p>The catch: the fully constrained model grows at only about 3% of baseline. Annealing (L5) restores baseline growth and still keeps variability about 2× below the unconstrained GEM.</p>
+        <p>We ablated enzyme constraints to <i>E. coli</i> iML1515 one level at a time. Median flux variability fell from 4.7 to 0.05. Adding <b>promiscuous enzymes</b> (one protein that catalyses many reactions) caused the largest single drop.</p>
+        <p>The catch is that the fully constrained model grows at only about 3% of the baseline rate. Annealing (L5) restores baseline growth. Flux variability then stays about 2× lower than in the unconstrained GEM.</p>
         <div class="lvl-btns" id="lvlBtns"></div>
         <div class="lvl-desc" id="lvlDesc"></div>
       </div>
       <div class="chart"><svg id="ablChart" viewBox="0 0 480 320"></svg>
-        <p class="note">Bars: median flux variability (log scale). Line: max biomass flux (1/hr). Values marked ≈ were read off Fig 3B. The rest are quoted in the text.</p></div>
+        <p class="note">Bars: median flux variability (log scale). Line: max biomass flux (1/hr). Values marked ≈ were read from Fig 3B. The rest come from the paper's text.</p></div>
     </div>
     <!-- 1 MFA -->
     <div class="finding" data-f="1">
       <div>
         <div class="big">46<small>reactions vs. ¹³C-MFA</small></div>
-        <p>Predicted flux ranges were compared with experimentally measured <sup>13</sup>C metabolic flux analysis. All fluxes were rescaled to glucose uptake = 100, so a model that simply grows slower doesn't look more precise.</p>
-        <p>Both enzyme-constrained models sit closer to the measured fluxes than the baseline GEM. Every pairwise comparison against baseline is significant (Wilcoxon, p &lt; 0.001). Tuning gives the <b>tightest</b> normalized ranges, while the untuned model has the closest flux <b>pattern</b>.</p>
+        <p>We compared predicted flux ranges with fluxes measured by <sup>13</sup>C metabolic flux analysis (MFA). All fluxes were rescaled so that glucose uptake = 100. This way, a model that simply grows slower does not look more precise.</p>
+        <p>Both enzyme-constrained models are closer to the measured fluxes than the baseline GEM. Every comparison against baseline is significant (Wilcoxon, p &lt; 0.001). The tuned model gives the <b>tightest</b> normalized ranges. The untuned model gives the flux <b>pattern</b> closest to the data.</p>
       </div>
       <div class="chart"><svg id="mfaChart" viewBox="0 0 480 300"></svg></div>
     </div>
@@ -282,18 +276,18 @@
     <div class="finding" data-f="2">
       <div>
         <div class="big">0.16<small>h⁻¹ onset error (iJO1366)</small></div>
-        <p>Fast-growing <i>E. coli</i> secretes acetate even with oxygen available. This is <b>overflow metabolism</b>. Standard FBA can't reproduce it without a hand-set oxygen limit, because respiration is always the best choice when enzymes cost nothing.</p>
-        <p>With a finite enzyme budget, cheaper fermentation wins at high growth rates, so the switch emerges on its own. Three separate <i>E. coli</i> reconstructions, each tuned only to max growth, all place the onset close to the experimental threshold.</p>
+        <p>When <i>E. coli</i> grows fast, it secretes acetate even when oxygen is available. This is <b>overflow metabolism</b>. Standard FBA cannot reproduce it unless someone sets an oxygen limit by hand. When enzymes cost nothing, respiration is always the best choice.</p>
+        <p>With a finite enzyme budget, fermentation wins at high growth rates because it needs less enzyme. The switch then appears without being imposed. Three different <i>E. coli</i> models, each tuned only to maximum growth, all place the onset close to the measured growth rate.</p>
       </div>
       <div class="chart"><svg id="ovfChart" viewBox="0 0 480 300"></svg>
-        <p class="note">Gap between predicted and experimental acetate-onset growth rate (log scale, lower is better). Fig 7D.</p></div>
+        <p class="note">Gap between the predicted and measured growth rate at which acetate secretion starts (log scale, lower is better). Fig 7D.</p></div>
     </div>
     <!-- 3 R. toruloides -->
     <div class="finding" data-f="3">
       <div>
         <div class="big" style="color:var(--orange)">0<small>fluxes used in tuning</small></div>
-        <p><i>Rhodotorula toruloides</i> is an oil-producing yeast with far less kinetic data than <i>E. coli</i>. kinGEMs tuned it only to the measured <b>growth rate</b>, then was compared against a manually curated, proteome-constrained GECKO model.</p>
-        <p>It recovered the NADPH trade-off: under nitrogen limitation, reducing power shifts from glutamate dehydrogenase (GDH1, amino acids) to fatty acid synthase (FAS, lipids). It also matched carbon-source-specific routes such as the D-arabinitol xylose bypass and the glyoxylate shunt on acetate. Two reported features were not reproduced.</p>
+        <p><i>Rhodotorula toruloides</i> is a yeast that makes oil. Far less kinetic data exists for it than for <i>E. coli</i>. kinGEMs tuned its model only to the measured <b>growth rate</b>. The authors then compared it with a GECKO model that was curated by hand and has proteome constraints.</p>
+        <p>The kinGEMs model recovered the NADPH trade-off. Under nitrogen limitation, NADPH use shifts from glutamate dehydrogenase (GDH1, amino acid synthesis) to fatty acid synthase (FAS, lipid synthesis). It also matched routes specific to each carbon source, such as the D-arabinitol bypass on xylose and the glyoxylate shunt on acetate. It did not reproduce two of the reported features.</p>
       </div>
       <div class="chart"><svg id="nadphChart" viewBox="0 0 480 300"></svg>
         <p class="note">Share of cytosolic NADPH consumption on glucose (Fig 6A; Rekena et al. reference values from the text).</p></div>
@@ -302,8 +296,8 @@
     <div class="finding" data-f="4">
       <div>
         <div class="big" style="color:var(--teal)">r ≈ 0.34<small>either way</small></div>
-        <p>Predicted enzyme amounts were compared with absolute proteomics (Schmidt et al.) across 15 growth conditions and 4 k<sub>cat</sub> sources: CPI-Pred, CatPred, BRENDA, and random log-normal draws. Agreement was moderate (Pearson r 0.27–0.46). <b>No k<sub>cat</sub> source clearly won</b>, and annealing did not consistently lower RMSE.</p>
-        <p>Parameters tuned on one condition and reused on a different one fit proteomics just as well as matched ones (r = 0.335 vs 0.336, across 767 transfers). Annealing mostly moves protein among the same high-abundance enzymes, whichever condition drove the search.</p>
+        <p>We compared predicted enzyme amounts with absolute proteomics data (Schmidt et al.). They used 15 growth conditions and 4 k<sub>cat</sub> sources: CPI-Pred, CatPred, BRENDA, and random draws from a log-normal distribution. Agreement was moderate (Pearson r from 0.27 to 0.46). <b>No k<sub>cat</sub> source clearly did best.</b> Annealing did not consistently lower RMSE.</p>
+        <p>Parameters tuned on one condition fit the proteomics of another condition as well as parameters tuned on that same condition (r = 0.335 vs 0.336, across 767 such transfers). Annealing mostly shifts protein among the same abundant enzymes, whichever condition it was tuned on.</p>
       </div>
       <div class="chart"><svg id="protChart" viewBox="0 0 480 260"></svg></div>
     </div>
@@ -311,8 +305,8 @@
     <div class="finding" data-f="5">
       <div>
         <div class="big" style="color:var(--brown)">93<small>BiGG models, tuned</small></div>
-        <p>The pipeline maps gene IDs to protein sequences, predicts k<sub>cat</sub> values, adds constraints and tunes. It ran end-to-end on the BiGG database, covering Gram-negative and Gram-positive bacteria, mycobacteria, parasitic protists, fungi and mammalian cell lines.</p>
-        <p>Quality is <b>not</b> uniform. <i>E. coli</i>/<i>Shigella</i> models stay closest to their unconstrained growth optimum (median deviation 8%), and the gap widens with phylogenetic distance, peaking in eukaryotes. That pattern is consistent with where CPI-Pred's training data and validation come from.</p>
+        <p>The pipeline maps gene IDs to protein sequences, predicts k<sub>cat</sub> values, adds the constraints, and tunes the model. The full pipeline ran on models from the BiGG database, covering Gram-negative and Gram-positive bacteria, mycobacteria, parasitic protists, fungi and mammalian cell lines.</p>
+        <p>Quality is <b>not</b> uniform. <i>E. coli</i> and <i>Shigella</i> models stay closest to the growth rate of their unconstrained model (median deviation 8%). The gap grows with evolutionary distance from <i>E. coli</i> and is largest in eukaryotes. This fits where CPI-Pred's training and validation data come from.</p>
       </div>
       <div class="chart"><svg id="taxChart" viewBox="0 0 480 300"></svg>
         <p class="note">Model counts per group as reported in Fig 9A.</p></div>
@@ -321,10 +315,10 @@
 
   <h3 style="margin-top:44px">Read with care</h3>
   <div class="caveats">
-    <div class="cav"><h4>Tuned k<sub>cat</sub>s are not measured k<sub>cat</sub>s</h4><p>Annealing compensates for <em>any</em> model error: kinetic, structural or regulatory. 37% of perturbed values hit the search ceiling. Read post-tuning shifts as model-level corrections, not in vivo turnover numbers.</p></div>
-    <div class="cav"><h4>Mostly k<sub>cat</sub> only</h4><p>K<sub>M</sub>, K<sub>I</sub> and substrate saturation also shape real enzyme capacity. Adding them is left for future work.</p></div>
-    <div class="cav"><h4>Precision ≠ accuracy</h4><p>A narrow flux range can still be wrong. That's why accuracy claims rest on independent data (MFA, proteomics, overflow onset), not on range width.</p></div>
-    <div class="cav"><h4>Best close to <i>E. coli</i></h4><p>Model quality drops for distant taxa. Some models couldn't be built at all because their gene IDs didn't map to protein sequences.</p></div>
+    <div class="cav"><h4>Tuned k<sub>cat</sub>s are not measured k<sub>cat</sub>s</h4><p>Annealing compensates for <em>any</em> model error, whether kinetic, structural or regulatory. 37% of the changed values hit the upper limit of the search. Treat tuned values as corrections to the model, not as turnover numbers in living cells.</p></div>
+    <div class="cav"><h4>Mostly k<sub>cat</sub> only</h4><p>K<sub>M</sub>, K<sub>I</sub> and substrate saturation also limit how fast real enzymes work. Future work can build on the incorporation of these constraints.</p></div>
+    <div class="cav"><h4>Precision ≠ accuracy</h4><p>A narrow flux range can still be wrong. So the accuracy claims rest on independent data (MFA, proteomics, overflow onset), not on how narrow the ranges are.</p></div>
+    <div class="cav"><h4>Best close to <i>E. coli</i></h4><p>Model quality drops for organisms distant from <i>E. coli</i>. Some models could not be built at all because their gene IDs did not map to protein sequences.</p></div>
   </div>
 </section>
 
