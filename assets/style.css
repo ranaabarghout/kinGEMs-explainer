@@ -71,7 +71,6 @@ h3{font-weight:500;font-size:20px;margin:0 0 8px}
 .hero h1 em{font-style:normal;color:var(--violet)}
 .subtitle{font-weight:300;font-size:clamp(19px,2.2vw,24px);line-height:1.35;color:var(--ink2);margin:0 0 22px;max-width:620px}
 .authors{font-size:15px;color:var(--ink2);margin:0 0 26px}
-.authors b{font-weight:500;color:var(--ink)}
 .btns{display:flex;flex-wrap:wrap;gap:10px}
 .btn{display:inline-flex;align-items:center;gap:8px;font-family:"Roboto Mono",monospace;font-size:12px;letter-spacing:.06em;padding:10px 16px;border-radius:999px;border:1.5px solid var(--ink);color:var(--ink);background:transparent;cursor:pointer}
 .btn:hover{background:var(--ink);color:var(--card)}
