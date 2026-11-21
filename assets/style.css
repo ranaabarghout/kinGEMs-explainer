@@ -163,11 +163,6 @@ h3{font-weight:500;font-size:20px;margin:0 0 8px}
 .lvl-btns button.on{border-color:var(--violet);color:var(--violet);background:var(--lav-2)}
 .lvl-desc{min-height:72px;font-size:14.5px;color:var(--ink2);margin-top:12px;border-left:2px solid var(--violet);padding-left:12px}
 
-/* caveats */
-.caveats{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:20px}
-.cav{border:1.5px solid var(--gold);background:var(--cream);border-radius:10px;padding:18px 20px}
-.cav h4{margin:0 0 6px;font-weight:500;font-size:16px;color:var(--ink)}
-.cav p{margin:0;font-size:14.5px;color:var(--ink2)}
 
 /* figures */
 .figs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-top:24px}
@@ -201,7 +196,6 @@ footer{margin:64px 0 0;border-top:1px solid var(--rule);padding:22px 0 40px;font
   .stage{height:360px}
   .panel{border-left:0;border-top:1px solid var(--rule2)}
   .tldr{grid-template-columns:repeat(2,1fr)}
-  .caveats{grid-template-columns:1fr}
 }
 @media (max-width:620px){
   body{font-size:16px}

@@ -51,7 +51,7 @@ $('#themeBtn').addEventListener('click', () => {
 const stages = [
   { tick:'~1 nm', small:'molecule', tag:'Scale · molecule',
     title:'Predict how fast each enzyme works',
-    body:['Genome-scale models need a turnover number, <span class="kc">k<sub>cat</sub></span>, for every enzyme-catalysed reaction. That is how many substrate molecules one enzyme converts per unit time.',
+    body:['Genome-scale models need a turnover number, <span class="kc">k<sub>cat</sub></span>, for every enzyme-catalyzed reaction. That is how many substrate molecules one enzyme converts per unit time.',
           '<b>CPI-Pred</b> is a multi-modal deep learning model. It embeds the protein sequence with the ESM-2 language model and the substrate with molecular fingerprints, then predicts k<sub>cat</sub> (and K<sub>M</sub>, K<sub>I</sub>, k<sub>cat</sub>/K<sub>M</sub>) <b>together with an uncertainty</b>. kinGEMs uses that uncertainty later.'],
     ref:'Fig 2A' },
   { tick:'~10 nm', small:'enzyme', tag:'Scale · enzyme',
@@ -60,19 +60,19 @@ const stages = [
           'Prediction removes that bottleneck. Every enzyme gets a value (shaded by speed), so enzyme-constrained models are no longer limited to organisms with decades of biochemistry behind them.'],
     ref:'Fig 1' },
   { tick:'~10³ rxns', small:'network', tag:'Scale · metabolic network',
-    title:'Turn speeds into constraints',
-    body:['A genome-scale model (GEM) lists every metabolic reaction and requires steady-state mass balance. On its own it allows a huge range of flux patterns.',
-          'kinGEMs links each reaction to the enzyme that runs it. Flux can be no more than <span class="kc">k<sub>cat</sub></span> × enzyme amount, and all enzymes share a <b>finite protein budget</b>. Gene–protein–reaction rules handle isoenzymes, multi-subunit complexes and promiscuous enzymes. The result is an <b>ecGEM</b>.'],
+    title:'Kinetics into constraints',
+    body:['A genome-scale model (GEM) lists every metabolic reaction and requires steady-state mass balance. On its own, it allows a huge range of flux patterns.',
+          'kinGEMs links each reaction to the enzyme (or enzymes) that catalyzes it. Flux can be no more than <span class="kc">k<sub>cat</sub></span> × enzyme amount, and all enzymes share a <b>finite protein budget</b>. Gene–protein–reaction rules handle isoenzymes, multi-subunit complexes and promiscuous enzymes. The result is an <b>ecGEM</b>.'],
     ref:'Fig 2B · Methods 4.1' },
   { tick:'~2 µm', small:'cell', tag:'Scale · cell phenotype',
-    title:'Tune against how the cell actually grows',
-    body:['Raw predictions are imperfect and depend on conditions, so a freshly built ecGEM often grows far too slowly. Earlier tools relax <i>all</i> enzymes with one global saturation factor.',
-          'kinGEMs runs <b>simulated annealing</b> instead. It perturbs the enzymes that use the most protein, keeps each one inside its CPI-Pred uncertainty range, and accepts changes that move predicted growth toward the measured rate.'],
+    title:'Tune against cell growth rate',
+    body:['Raw predictions are imperfect and depend on conditions, so a freshly built ecGEM under-predicts the cell\'s biomass.',
+          'kinGEMs runs <b>simulated annealing</b> to address this issue by perturbing the enzymes that use the most protein budget, while taking the CPI-Pred uncertainty range into account.'],
     ref:'Fig 2D · Fig 10' },
   { tick:'93 GEMs', small:'tree of life', tag:'Scale · phylogeny',
     title:'Run it across the tree of life',
     body:['Because each step is automated (gene ID → protein sequence → k<sub>cat</sub> → constraints → tuning), the pipeline ran on the BiGG database and produced <b>93 tuned ecGEMs</b>. They span enterobacteria, Firmicutes, mycobacteria, cyanobacteria, parasitic protists, fungi and mammalian cell lines.',
-          'Model quality is best close to <i>E. coli</i> and drops with phylogenetic distance. The paper reports this openly as a limitation.'],
+          'Model quality is best close to <i>E. coli</i> and drops with phylogenetic distance. We report this openly as a limitation.'],
     ref:'Fig 9 · Table E5' }
 ];
 let cur = 0;
@@ -320,8 +320,10 @@ function drawAnneal(){
   el('circle',{cx:x(S.hist.length-1),cy:y1(last.mu),r:4.5,fill:'var(--violet)'},svg);
   // temperature
   const y2 = v => top2 + h2 - v*h2;
+  el('rect',{x:L,y:top2,width:W-L-R,height:h2,fill:'none',stroke:'var(--rule2)'},svg);
   el('line',{x1:L,y1:top2+h2,x2:W-R,y2:top2+h2,stroke:'var(--rule)'},svg);
-  el('text',{x:L,y:top2-6},svg,'temperature T');
+  el('text',{x:L-8,y:top2+h2/2+4,'text-anchor':'end'},svg,'T');
+  el('text',{x:W-R-6,y:top2+14,'text-anchor':'end'},svg,'temperature');
   el('polyline',{points:S.hist.map((h,i)=>`${x(i)},${y2(h.T)}`).join(' '),fill:'none',stroke:'var(--blue)','stroke-width':1.8},svg);
   el('text',{x:W-R,y:top2+h2+16,'text-anchor':'end'},svg,'iteration →');
 }
@@ -352,7 +354,7 @@ $$('#findTabs button').forEach(b => b.onclick = () => {
 const LV = [
   {id:'L1', name:'Baseline GEM', fv:4.7, mu:0.87, c:'#3b78b5', d:'Stoichiometry and mass balance only, with no enzymes. Many flux patterns are equally optimal.'},
   {id:'L2', name:'Single enzyme', fv:4.0, mu:0.87, c:'#f28e2b', approx:true, d:'One k<sub>cat</sub> per reaction, ignoring how enzymes are shared or assembled. Hardly changes the picture.'},
-  {id:'L3a', name:'+ Isoenzymes', fv:1.2, mu:0.83, c:'#3ea24a', approx:true, d:'Reactions catalysed by several alternative enzymes are modelled properly. Variability starts to fall.'},
+  {id:'L3a', name:'+ Isoenzymes', fv:1.2, mu:0.83, c:'#3ea24a', approx:true, d:'Reactions catalyzed by several alternative enzymes are modelled properly. Variability starts to fall.'},
   {id:'L3b', name:'+ Complexes', fv:1.7, mu:0.75, c:'#d62728', approx:true, d:'Multi-subunit enzymes now need every subunit. Growth begins to slip.'},
   {id:'L3c', name:'+ Promiscuous', fv:0.05, mu:0.023, c:'#9467bd', approxMu:true, d:'One enzyme serving many reactions must split its capacity. This gives the largest single drop: shared enzymes remove most alternative routes.'},
   {id:'L4', name:'All constraints', fv:0.05, mu:0.023, c:'#8c564b', d:'Fully constrained with untuned predictions. 94× less variability than baseline, but growth falls about 97% because a few under-predicted k<sub>cat</sub>s choke the budget.'},

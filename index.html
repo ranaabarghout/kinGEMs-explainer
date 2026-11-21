@@ -207,12 +207,12 @@
 <!-- ============ ANNEALING DEMO ============ -->
 <section id="anneal">
   <p class="eyebrow">Try it · stochastic tuning</p>
-  <h2>Why the predictions need tuning, and how kinGEMs does it</h2>
+  <h2>Tuning uncertain kinetic parameter predictions in silico</h2>
   <div class="card">
     <div class="demo">
       <div>
-        <p class="lede" style="font-size:17px">A model built from raw ML predictions usually grows far too slowly. A few enzymes with predicted k<sub>cat</sub> values that are too low use up the whole protein budget. Other pipelines fix this by relaxing <em>every</em> enzyme with one global saturation factor. kinGEMs instead changes the enzymes that use the most protein, <b>one k<sub>cat</sub> at a time</b>. Each change stays <b>inside the ML model uncertainty range</b>. kinGEMs keeps changes that bring growth closer to the measured rate. Early in the search it also keeps some worse ones, so it does not get stuck.</p>
-        <p style="color:var(--ink2);font-size:15px">Below, a <b>toy pathway of six enzymes</b> runs the same loop. For each enzyme, the red bar is its allowed range, the grey tick is the CPI-Pred starting value, the orange ✕ is the current value, and the lilac underline is its share of the protein budget.</p>
+        <p class="lede" style="font-size:17px">When optimizing an ecGEM built from raw ML predictions, the growth rate is too small. A few enzymes with predicted k<sub>cat</sub> values that are too low use up the entire protein budget. kinGEMs changes the enzymes that use the most protein budget through information from the <b>ML model uncertainty range</b>. This is done through a <b>simulated annealing</b> process.</p>
+        <p style="color:var(--ink2);font-size:15px">Below, a <b>toy pathway of six enzymes</b> simulates this loop. For each enzyme, the red bar is its allowed range, the grey tick is the CPI-Pred starting value, the orange ✕ is the current value, and the lilac underline is its share of the protein budget.</p>
         <div id="enzRows"></div>
         <div class="demo-ctrl">
           <button class="btn primary" id="runBtn">▶ Run annealing</button>
@@ -229,7 +229,6 @@
         </div>
         <div class="chart"><svg id="annealChart" viewBox="0 0 460 300"></svg></div>
         <div class="log" id="log"></div>
-        <p class="note">This toy runs in your browser and only illustrates the idea. Its numbers are not from the paper. In the real runs (Fig 10), the temperature starts at T₀ = 100. The search changes the 500 enzymes in iML1515 with the largest mass share. Each k<sub>cat</sub> is capped two orders of magnitude above its CPI-Pred standard deviation. A run stops early after 50 iterations without improvement.</p>
       </div>
     </div>
   </div>
@@ -237,9 +236,9 @@
 
 <!-- ============ FINDINGS ============ -->
 <section id="findings">
-  <p class="eyebrow">What the paper shows</p>
+  <p class="eyebrow">What we show</p>
   <h2>Precision, then accuracy</h2>
-  <p class="lede">The paper scores models on two separate axes. <b>Precision</b> is how far the constraints shrink the space of possible fluxes. <b>Accuracy</b> is how well predictions match experimental data the model was never tuned on. A tighter model is not automatically a correct one, so the paper tests each axis separately.</p>
+  <p class="lede">We score models on two separate axes. <b>Precision</b> is how far the constraints shrink the space of possible fluxes. <b>Accuracy</b> is how well predictions match experimental data the model was not tuned on.</p>
 
   <div class="find-tabs" id="findTabs">
     <button data-f="0" class="on">Precision</button>
@@ -255,13 +254,13 @@
     <div class="finding on" data-f="0">
       <div>
         <div class="big">94×<small>smaller median flux range</small></div>
-        <p>We ablated enzyme constraints to <i>E. coli</i> iML1515 one level at a time. Median flux variability fell from 4.7 to 0.05. Adding <b>promiscuous enzymes</b> (one protein that catalyses many reactions) caused the largest single drop.</p>
+        <p>We ablated enzyme constraints to <i>E. coli</i> iML1515 one level at a time. Median flux variability fell from 4.7 to 0.05. Adding <b>promiscuous enzymes</b> (one protein that catalyzes many reactions) caused the largest single drop.</p>
         <p>The catch is that the fully constrained model grows at only about 3% of the baseline rate. Annealing (L5) restores baseline growth. Flux variability then stays about 2× lower than in the unconstrained GEM.</p>
         <div class="lvl-btns" id="lvlBtns"></div>
         <div class="lvl-desc" id="lvlDesc"></div>
       </div>
       <div class="chart"><svg id="ablChart" viewBox="0 0 480 320"></svg>
-        <p class="note">Bars: median flux variability (log scale). Line: max biomass flux (1/hr). Values marked ≈ were read from Fig 3B. The rest come from the paper's text.</p></div>
+        <p class="note">Bars: median flux variability (log scale). Line: max biomass flux (1/hr). Values marked ≈ were read from Fig 3B. The rest come from the text of our paper.</p></div>
     </div>
     <!-- 1 MFA -->
     <div class="finding" data-f="1">
@@ -276,7 +275,7 @@
     <div class="finding" data-f="2">
       <div>
         <div class="big">0.16<small>h⁻¹ onset error (iJO1366)</small></div>
-        <p>When <i>E. coli</i> grows fast, it secretes acetate even when oxygen is available. This is <b>overflow metabolism</b>. Standard FBA cannot reproduce it unless someone sets an oxygen limit by hand. When enzymes cost nothing, respiration is always the best choice.</p>
+        <p>When <i>E. coli</i> grows fast, it secretes acetate even when oxygen is available. This is <b>overflow metabolism</b>. Standard FBA cannot reproduce it unless an oxygen limit is set manually.</p>
         <p>With a finite enzyme budget, fermentation wins at high growth rates because it needs less enzyme. The switch then appears without being imposed. Three different <i>E. coli</i> models, each tuned only to maximum growth, all place the onset close to the measured growth rate.</p>
       </div>
       <div class="chart"><svg id="ovfChart" viewBox="0 0 480 300"></svg>
@@ -286,7 +285,7 @@
     <div class="finding" data-f="3">
       <div>
         <div class="big" style="color:var(--orange)">0<small>fluxes used in tuning</small></div>
-        <p><i>Rhodotorula toruloides</i> is a yeast that makes oil. Far less kinetic data exists for it than for <i>E. coli</i>. kinGEMs tuned its model only to the measured <b>growth rate</b>. The authors then compared it with a GECKO model that was curated by hand and has proteome constraints.</p>
+        <p><i>Rhodotorula toruloides</i> is a yeast that makes oil. Far less kinetic data exists for it than for <i>E. coli</i>. kinGEMs tuned its model only to the measured <b>growth rate</b>. We then compared it with a GECKO model that was curated by hand and has proteome constraints.</p>
         <p>The kinGEMs model recovered the NADPH trade-off. Under nitrogen limitation, NADPH use shifts from glutamate dehydrogenase (GDH1, amino acid synthesis) to fatty acid synthase (FAS, lipid synthesis). It also matched routes specific to each carbon source, such as the D-arabinitol bypass on xylose and the glyoxylate shunt on acetate. It did not reproduce two of the reported features.</p>
       </div>
       <div class="chart"><svg id="nadphChart" viewBox="0 0 480 300"></svg>
@@ -296,7 +295,7 @@
     <div class="finding" data-f="4">
       <div>
         <div class="big" style="color:var(--teal)">r ≈ 0.34<small>either way</small></div>
-        <p>We compared predicted enzyme amounts with absolute proteomics data (Schmidt et al.). They used 15 growth conditions and 4 k<sub>cat</sub> sources: CPI-Pred, CatPred, BRENDA, and random draws from a log-normal distribution. Agreement was moderate (Pearson r from 0.27 to 0.46). <b>No k<sub>cat</sub> source clearly did best.</b> Annealing did not consistently lower RMSE.</p>
+        <p>We compared predicted enzyme amounts with absolute proteomics data (Schmidt et al.). We used 15 growth conditions and 4 k<sub>cat</sub> sources: CPI-Pred, CatPred, BRENDA, and random draws from a log-normal distribution. Agreement was moderate (Pearson r from 0.27 to 0.46). <b>No k<sub>cat</sub> source clearly did best.</b> Annealing did not consistently lower RMSE.</p>
         <p>Parameters tuned on one condition fit the proteomics of another condition as well as parameters tuned on that same condition (r = 0.335 vs 0.336, across 767 such transfers). Annealing mostly shifts protein among the same abundant enzymes, whichever condition it was tuned on.</p>
       </div>
       <div class="chart"><svg id="protChart" viewBox="0 0 480 260"></svg></div>
@@ -311,14 +310,6 @@
       <div class="chart"><svg id="taxChart" viewBox="0 0 480 300"></svg>
         <p class="note">Model counts per group as reported in Fig 9A.</p></div>
     </div>
-  </div>
-
-  <h3 style="margin-top:44px">Read with care</h3>
-  <div class="caveats">
-    <div class="cav"><h4>Tuned k<sub>cat</sub>s are not measured k<sub>cat</sub>s</h4><p>Annealing compensates for <em>any</em> model error, whether kinetic, structural or regulatory. 37% of the changed values hit the upper limit of the search. Treat tuned values as corrections to the model, not as turnover numbers in living cells.</p></div>
-    <div class="cav"><h4>Mostly k<sub>cat</sub> only</h4><p>K<sub>M</sub>, K<sub>I</sub> and substrate saturation also limit how fast real enzymes work. Future work can build on the incorporation of these constraints.</p></div>
-    <div class="cav"><h4>Precision ≠ accuracy</h4><p>A narrow flux range can still be wrong. So the accuracy claims rest on independent data (MFA, proteomics, overflow onset), not on how narrow the ranges are.</p></div>
-    <div class="cav"><h4>Best close to <i>E. coli</i></h4><p>Model quality drops for organisms distant from <i>E. coli</i>. Some models could not be built at all because their gene IDs did not map to protein sequences.</p></div>
   </div>
 </section>
 
